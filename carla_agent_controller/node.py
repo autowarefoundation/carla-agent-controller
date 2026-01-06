@@ -21,7 +21,7 @@ from tf_transformations import (
 from autoware_perception_msgs.msg import PredictedObjects
 
 
-class CarlaEgoFollower(Node):
+class CarlaAgentController(Node):
     """
     to do: add documentation
     """
@@ -29,25 +29,13 @@ class CarlaEgoFollower(Node):
         super().__init__("carla_agent_controller")
         self.get_logger().info("launch carla_agent_controller")
 
-        # parameter initialization
-        self.declare_parameter("host", "127.0.0.1")
-        self.declare_parameter("port", 2000)
-        self.declare_parameter("time_out", 5.0)
-        self.declare_parameter("map", "Town01")
-        self.declare_parameter("euler.roll", 3.141592653589793)
-        self.declare_parameter("euler.pitch", 0.0)
-        self.declare_parameter("euler.yaw", 0.0)
-        self.declare_parameter("translation.x", -81655.015625)
-        self.declare_parameter("translation.y", 50135.9421875)
-        self.declare_parameter("translation.z", 43.09799999999389)
-
         # connect carla
-        host = self.get_parameter("host").get_parameter_value().string_value
-        port = self.get_parameter("port").get_parameter_value().integer_value
-        time_out = self.get_parameter("time_out").get_parameter_value().double_value
+        host = self.declare_parameter("host", "127.0.0.1").value
+        port = self.declare_parameter("port", 2000).value
+        time_out = self.declare_parameter("time_out", 5.0).value
         self.client = carla.Client(host, port)
         self.client.set_timeout(time_out)
-        map_name = self.get_parameter("map").get_parameter_value().string_value
+        map_name = self.declare_parameter("map", "").value
         self.world = self.client.load_world(map_name)
         self.get_logger().info(f"Map name: {self.world.get_map().name}")
 
@@ -65,26 +53,27 @@ class CarlaEgoFollower(Node):
         # Transformation Matrix
         self.T_mgrs_carla = np.eye(4, dtype=np.float64)
         # rotation
-        roll = self.get_parameter("euler.roll").get_parameter_value().double_value
-        pitch = self.get_parameter("euler.pitch").get_parameter_value().double_value
-        yaw = self.get_parameter("euler.yaw").get_parameter_value().double_value
+        roll = self.declare_parameter("euler.roll", 3.141592653589793).value
+        pitch = self.declare_parameter("euler.pitch", 0.0).value
+        yaw = self.declare_parameter("euler.yaw", 0.0).value
         matrix = euler_matrix(roll, pitch, yaw, axes="sxyz").astype(np.float64)
         self.T_mgrs_carla = matrix
         # translation
         self.T_mgrs_carla[0][3] = (
-            self.get_parameter("translation.x").get_parameter_value().double_value
+            self.declare_parameter("translation.x", -81655.015625).value
         )
         self.T_mgrs_carla[1][3] = (
-            self.get_parameter("translation.y").get_parameter_value().double_value
+            self.declare_parameter("translation.y", 50135.9421875).value
         )
         self.T_mgrs_carla[2][3] = (
-            self.get_parameter("translation.z").get_parameter_value().double_value
+            self.declare_parameter("translation.z", 43.09799999999389).value
         )
 
         # for managing the state of NPC
         self.npc_map = {}
 
     def callback(self, msg: PredictedObjects) -> None:
+        self.get_logger().info(f"{self.T_mgrs_carla}")
         predictedObjects = msg.objects
         msg_uuid_set = set()
         if msg.objects is None:
@@ -174,7 +163,7 @@ def main():
     rclpy.init()
     node = None
     try:
-        node = CarlaEgoFollower()
+        node = CarlaAgentController()
         rclpy.spin(node)
     finally:
         node.destroy_node()
