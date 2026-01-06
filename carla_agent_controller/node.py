@@ -44,7 +44,7 @@ class CarlaEgoFollower(Node):
         host = self.get_parameter("host").get_parameter_value().string_value
         port = self.get_parameter("port").get_parameter_value().integer_value
         time_out = self.get_parameter("time_out").get_parameter_value().double_value
-        self.client = carla.Client(host, 2000)
+        self.client = carla.Client(host, port)
         self.client.set_timeout(time_out)
         self.world = self.client.get_world()
         bp_lib = self.world.get_blueprint_library()
