@@ -3,6 +3,7 @@
 # ros
 import rclpy
 from rclpy.node import Node
+from geometry_msgs.msg import Pose
 
 # lib
 import math
@@ -98,7 +99,7 @@ class CarlaEgoFollower(Node):
 
         return
 
-    def get_carla_pose(self, ros_pose: PoseWithCovariance) -> carla.Transform:
+    def get_carla_pose(self, ros_pose: Pose) -> carla.Transform:
         T_mgrs = np.eye(4, dtype=np.float64)
         q = np.array(
             [
