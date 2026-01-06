@@ -22,6 +22,9 @@ from autoware_perception_msgs.msg import PredictedObjects
 
 
 class CarlaEgoFollower(Node):
+    """
+    to do: add documentation
+    """
     def __init__(self, host="127.0.0.1", port=2000, hz=20.0):
         super().__init__("carla_agent_controller")
         self.get_logger().info("launch carla_agent_controller")
