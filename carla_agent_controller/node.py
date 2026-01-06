@@ -33,6 +33,7 @@ class CarlaEgoFollower(Node):
         self.declare_parameter("host", "127.0.0.1")
         self.declare_parameter("port", 2000)
         self.declare_parameter("time_out", 5.0)
+        self.declare_parameter("map", "Town01")
         self.declare_parameter("euler.roll", 3.141592653589793)
         self.declare_parameter("euler.pitch", 0.0)
         self.declare_parameter("euler.yaw", 0.0)
@@ -46,7 +47,10 @@ class CarlaEgoFollower(Node):
         time_out = self.get_parameter("time_out").get_parameter_value().double_value
         self.client = carla.Client(host, port)
         self.client.set_timeout(time_out)
-        self.world = self.client.get_world()
+        map_name = self.get_parameter("map").get_parameter_value().string_value
+        self.world = self.client.load_world(map_name)
+        self.get_logger().info(f"Map name: {self.world.get_map().name}")
+
         bp_lib = self.world.get_blueprint_library()
         self.veh_bp = bp_lib.find("vehicle.tesla.model3")
 
