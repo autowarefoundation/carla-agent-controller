@@ -1,10 +1,10 @@
 #carla_agent_controller:
-/carla_agent_controller/carla_agent_controller:
+/carla_agent_controller/**:
   ros__parameters:
     host: "127.0.0.1"
     port: 2000
     hz: 20.0
-    time_out: 10.0
+    time_out: 30.0
     map: "Town01" # [Town01, Town02, Town03, Town04, Town05, Town06, Town07]
     translation:
       x: 0.0
@@ -14,7 +14,6 @@
       roll: 0.0
       pitch: 0.0
       yaw: 0.0
-
 
 # Town01
 # Town02
