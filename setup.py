@@ -21,7 +21,7 @@ setup(
     license="Apache License 2.0",
     entry_points={
         "console_scripts": [
-            "carla_agent_controller = carla_agent_controller.node:main",
+            "npc_controller_node = carla_agent_controller.npc_controller_node:main",
         ],
     },
 )

@@ -14,8 +14,8 @@ def generate_launch_description():
         Node(
             package='carla_agent_controller',
             namespace='carla_agent_controller',
-            executable='carla_agent_controller',
-            name='carla_agent_controller',
+            executable='npc_controller_node',
+            name='npc_controller_node',
             parameters=[param],
         ),
     ])
