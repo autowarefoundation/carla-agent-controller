@@ -25,6 +25,7 @@ class AgentController(Node):
     """
     to do: add documentation
     """
+
     def __init__(self, host="127.0.0.1", port=2000, hz=20.0):
         super().__init__("carla_agent_controller")
         self.get_logger().info("launch carla_agent_controller")
@@ -36,7 +37,9 @@ class AgentController(Node):
         self.client = carla.Client(host, port)
         self.client.set_timeout(time_out)
         map_name = self.declare_parameter("map", "").value
-        self.world = self.client.load_world(map_name)
+        self.world = self.client.get_world()
+        if map_name != self.world.get_map().name:
+            self.world = self.client.load_world(map_name)
         self.get_logger().info(f"Map name: {self.world.get_map().name}")
 
         bp_lib = self.world.get_blueprint_library()
@@ -59,21 +62,21 @@ class AgentController(Node):
         matrix = euler_matrix(roll, pitch, yaw, axes="sxyz").astype(np.float64)
         self.T_mgrs_carla = matrix
         # translation
-        self.T_mgrs_carla[0][3] = (
-            self.declare_parameter("translation.x", -81655.015625).value
-        )
-        self.T_mgrs_carla[1][3] = (
-            self.declare_parameter("translation.y", 50135.9421875).value
-        )
-        self.T_mgrs_carla[2][3] = (
-            self.declare_parameter("translation.z", 43.09799999999389).value
-        )
+        self.T_mgrs_carla[0][3] = self.declare_parameter(
+            "translation.x", -81655.015625
+        ).value
+        self.T_mgrs_carla[1][3] = self.declare_parameter(
+            "translation.y", 50135.9421875
+        ).value
+        self.T_mgrs_carla[2][3] = self.declare_parameter(
+            "translation.z", 43.09799999999389
+        ).value
 
         # for managing the state of NPC
         self.npc_map = {}
 
     def callback(self, msg: PredictedObjects) -> None:
-        self.get_logger().info(f"{self.T_mgrs_carla}")
+        # self.get_logger().info(f"{self.T_mgrs_carla}")
         predictedObjects = msg.objects
         msg_uuid_set = set()
         if msg.objects is None:
