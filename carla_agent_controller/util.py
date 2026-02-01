@@ -4,6 +4,7 @@ import math
 from geometry_msgs.msg import Pose
 from tf_transformations import euler_from_quaternion
 
+
 def connect_to_carla(host, port, time_out, map_name):
     client = carla.Client(host, port)
     client.set_timeout(time_out)

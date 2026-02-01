@@ -28,9 +28,10 @@ class EgoController(Node):
         map_name = self.declare_parameter("map", "").value
         vehicle_model = self.declare_parameter("vehicle_model", "").value
 
-        
         # load carla simulator
-        self.client, self.world, bp_lib = connect_to_carla(host, port, time_out, map_name)
+        self.client, self.world, bp_lib = connect_to_carla(
+            host, port, time_out, map_name
+        )
         self.get_logger().info(f"Map name: {self.world.get_map().name}")
         self.veh_bp = bp_lib.find(vehicle_model)
 
