@@ -6,14 +6,14 @@
     hz: 20.0
     time_out: 30.0
     map: "Town01" # [Town01, Town02, Town03, Town04, Town05, Town06, Town07]
-    translation:
-      x: 0.0
-      y: 0.0
-      z: 0.0
-    euler:
-      roll: 0.0
-      pitch: 0.0
-      yaw: 0.0
+    # translation:
+    #   x: 0.0
+    #   y: 0.0
+    #   z: 0.0
+    # euler:
+    #   roll: 0.0
+    #   pitch: 0.0
+    #   yaw: 0.0
 
 # Town01
 # Town02

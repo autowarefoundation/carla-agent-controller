@@ -54,29 +54,29 @@ class AgentController(Node):
         )
 
         # Transformation Matrix
-        self.T_mgrs_carla = np.eye(4, dtype=np.float64)
-        # rotation
-        roll = self.declare_parameter("euler.roll", 3.141592653589793).value
-        pitch = self.declare_parameter("euler.pitch", 0.0).value
-        yaw = self.declare_parameter("euler.yaw", 0.0).value
-        matrix = euler_matrix(roll, pitch, yaw, axes="sxyz").astype(np.float64)
-        self.T_mgrs_carla = matrix
-        # translation
-        self.T_mgrs_carla[0][3] = self.declare_parameter(
-            "translation.x", -81655.015625
-        ).value
-        self.T_mgrs_carla[1][3] = self.declare_parameter(
-            "translation.y", 50135.9421875
-        ).value
-        self.T_mgrs_carla[2][3] = self.declare_parameter(
-            "translation.z", 43.09799999999389
-        ).value
+        # self.T_carla_mgrs = np.eye(4, dtype=np.float64)
+        # # rotation
+        # roll = self.declare_parameter("euler.roll", 3.141592653589793).value
+        # pitch = self.declare_parameter("euler.pitch", 0.0).value
+        # yaw = self.declare_parameter("euler.yaw", 0.0).value
+        # matrix = euler_matrix(roll, pitch, yaw, axes="sxyz").astype(np.float64)
+        # self.T_carla_mgrs = matrix
+        # # translation
+        # self.T_carla_mgrs[0][3] = self.declare_parameter(
+        #     "translation.x", 0.0
+        # ).value
+        # self.T_carla_mgrs[1][3] = self.declare_parameter(
+        #     "translation.y", 0.0
+        # ).value
+        # self.T_carla_mgrs[2][3] = self.declare_parameter(
+        #     "translation.z", 0.0
+        # ).value
 
         # for managing the state of NPC
         self.npc_map = {}
 
     def callback(self, msg: PredictedObjects) -> None:
-        # self.get_logger().info(f"{self.T_mgrs_carla}")
+        # self.get_logger().info(f"{self.T_carla_mgrs}")
         predictedObjects = msg.objects
         msg_uuid_set = set()
         if msg.objects is None:
@@ -99,8 +99,7 @@ class AgentController(Node):
         return
 
     def get_carla_pose(self, ros_pose: Pose) -> carla.Transform:
-        T_mgrs = np.eye(4, dtype=np.float64)
-        q = np.array(
+        quaternion = np.array(
             [
                 ros_pose.orientation.x,
                 ros_pose.orientation.y,
@@ -109,34 +108,62 @@ class AgentController(Node):
             ],
             dtype=np.float64,
         )
-        T_mgrs = quaternion_matrix(q).astype(np.float64)
-
-        p = np.array(
-            [ros_pose.position.x, ros_pose.position.y, ros_pose.position.z],
-            dtype=np.float64,
-        )
-        T_mgrs[0:3, 3] = p
-
-        T_carla = np.eye(4, dtype=np.float64)
-        T_carla = self.T_mgrs_carla @ T_mgrs
-
-        position = T_carla[0:3, 3]
-        quaternion = quaternion_from_matrix(T_carla)
         ros_roll, ros_pitch, ros_yaw = euler_from_quaternion(quaternion)
+
+        # right_hand → left_hand
         spawn_pose = carla.Transform(
             carla.Location(
-                x=np.float64(position[0]),
-                y=np.float64(position[1]),
-                z=np.float64(position[2]),
+                x=np.float64(ros_pose.position.x),
+                y=np.float64((-1) * ros_pose.position.y),
+                z=np.float64(ros_pose.position.z),
             ),
             carla.Rotation(
                 pitch=np.float64(ros_pitch * (180.0 / math.pi)),
                 yaw=np.float64(ros_yaw * (180.0 / math.pi)),
-                roll=0.0,  # np.float64(ros_roll*(180.0/math.pi))
+                roll=np.float64(ros_roll * (180.0 / math.pi)),
             ),
         )
-
         return spawn_pose
+
+    # def get_carla_pose(self, ros_pose: Pose) -> carla.Transform:
+    #     T_mgrs_object = np.eye(4, dtype=np.float64)
+    #     q = np.array(
+    #         [
+    #             ros_pose.orientation.x,
+    #             ros_pose.orientation.y,
+    #             ros_pose.orientation.z,
+    #             ros_pose.orientation.w,
+    #         ],
+    #         dtype=np.float64,
+    #     )
+    #     T_mgrs_object = quaternion_matrix(q).astype(np.float64)
+
+    #     p = np.array(
+    #         [ros_pose.position.x, ros_pose.position.y, ros_pose.position.z],
+    #         dtype=np.float64,
+    #     )
+    #     T_mgrs_object[0:3, 3] = p
+
+    #     T_carla_object = np.eye(4, dtype=np.float64)
+    #     T_carla_object = self.T_carla_mgrs @ T_mgrs_object
+
+    #     position = T_carla_object[0:3, 3]
+    #     quaternion = quaternion_from_matrix(T_carla_object)
+    #     ros_roll, ros_pitch, ros_yaw = euler_from_quaternion(quaternion)
+    #     spawn_pose = carla.Transform(
+    #         carla.Location(
+    #             x=np.float64(position[0]),
+    #             y=np.float64(position[1]),
+    #             z=np.float64(position[2]),
+    #         ),
+    #         carla.Rotation(
+    #             pitch=np.float64(ros_pitch * (180.0 / math.pi)),
+    #             yaw=np.float64(ros_yaw * (180.0 / math.pi)),
+    #             roll=0.0,  # np.float64(ros_roll*(180.0/math.pi))
+    #         ),
+    #     )
+
+    #     return spawn_pose
 
     def update_npc(self, uuid: uuid.UUID, spawn_pose: carla.Transform) -> None:
         if uuid in self.npc_map:
@@ -149,6 +176,7 @@ class AgentController(Node):
         else:
             self.get_logger().info("object spawn")
             try:
+                spawn_pose.location.z = 1.0
                 self.npc_map[uuid] = self.world.spawn_actor(self.veh_bp, spawn_pose)
             except Exception as e:
                 self.get_logger().warning(f"{e}")
