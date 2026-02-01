@@ -9,7 +9,7 @@ from geometry_msgs.msg import Pose, PoseWithCovarianceStamped
 import carla
 
 # util
-from carla_agent_controller.util import ros_2_carla_pose
+from carla_agent_controller.util import connect_to_carla, ros_2_carla_pose
 
 
 class EgoController(Node):
@@ -21,20 +21,18 @@ class EgoController(Node):
         super().__init__("carla_ego_controller")
         self.get_logger().info("launch carla_ego_controller")
 
-        # connect carla
+        # load param
         host = self.declare_parameter("host", "127.0.0.1").value
         port = self.declare_parameter("port", 2000).value
         time_out = self.declare_parameter("time_out", 5.0).value
-        self.client = carla.Client(host, port)
-        self.client.set_timeout(time_out)
         map_name = self.declare_parameter("map", "").value
-        self.world = self.client.get_world()
-        if map_name != self.world.get_map().name:
-            self.world = self.client.load_world(map_name)
-        self.get_logger().info(f"Map name: {self.world.get_map().name}")
+        vehicle_model = self.declare_parameter("vehicle_model", "").value
 
-        bp_lib = self.world.get_blueprint_library()
-        self.veh_bp = bp_lib.find("vehicle.toyota.prius")
+        
+        # load carla simulator
+        self.client, self.world, bp_lib = connect_to_carla(host, port, time_out, map_name)
+        self.get_logger().info(f"Map name: {self.world.get_map().name}")
+        self.veh_bp = bp_lib.find(vehicle_model)
 
         # set subscriber
         self.subscription = self.create_subscription(

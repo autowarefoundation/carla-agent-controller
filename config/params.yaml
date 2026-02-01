@@ -6,3 +6,14 @@
     hz: 20.0
     time_out: 30.0
     map: "Town01" # [Town01, Town02, Town03, Town04, Town05, Town06, Town07]
+
+
+# set calrla vehicle model
+# For more details: https://carla.readthedocs.io/en/latest/catalogue_vehicles/
+/carla_agent_controller/ego_controller_node:
+  ros__parameters:
+    vehicle_model: "vehicle.toyota.prius"
+
+/carla_agent_controller/ego_controller_node:
+  ros__parameters:
+    vehicle_model: "vehicle.tesla.model3"

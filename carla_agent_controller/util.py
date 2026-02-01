@@ -4,6 +4,15 @@ import math
 from geometry_msgs.msg import Pose
 from tf_transformations import euler_from_quaternion
 
+def connect_to_carla(host, port, time_out, map_name):
+    client = carla.Client(host, port)
+    client.set_timeout(time_out)
+    world = client.get_world()
+    if map_name != world.get_map().name:
+        world = client.load_world(map_name)
+    bp_lib = world.get_blueprint_library()
+    return client, world, bp_lib
+
 
 def ros_2_carla_pose(ros_pose: Pose) -> carla.Transform:
     quaternion = np.array(
@@ -33,4 +42,4 @@ def ros_2_carla_pose(ros_pose: Pose) -> carla.Transform:
     return spawn_pose
 
 
-# todo: add rosMgrs2CarlaPose
+# todo: add rosMgrs_to_CarlaPose
