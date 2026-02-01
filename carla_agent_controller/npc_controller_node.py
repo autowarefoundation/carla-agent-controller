@@ -6,14 +6,15 @@ from rclpy.node import Node
 from geometry_msgs.msg import Pose
 
 # lib
-import math
 import uuid
 import carla
 import numpy as np
-from tf_transformations import euler_from_quaternion
 
 # autoware
 from autoware_perception_msgs.msg import PredictedObjects
+
+# util
+from carla_agent_controller.util import ros_2_carla_pose
 
 
 class AgentController(Node):
@@ -57,7 +58,7 @@ class AgentController(Node):
         if msg.objects is None:
             self.npc_map = []
         for object in predictedObjects:
-            spawn_pose = self.get_carla_pose(
+            spawn_pose = self.ros_2_carla_pose(
                 object.kinematics.initial_pose_with_covariance.pose
             )
             object_uuid = uuid.UUID(bytes=bytes(object.object_id.uuid))
@@ -72,33 +73,6 @@ class AgentController(Node):
                     self.get_logger().warning(f"{e}")
 
         return
-
-    def get_carla_pose(self, ros_pose: Pose) -> carla.Transform:
-        quaternion = np.array(
-            [
-                ros_pose.orientation.x,
-                ros_pose.orientation.y,
-                ros_pose.orientation.z,
-                ros_pose.orientation.w,
-            ],
-            dtype=np.float64,
-        )
-        ros_roll, ros_pitch, ros_yaw = euler_from_quaternion(quaternion)
-
-        # right_hand → left_hand
-        spawn_pose = carla.Transform(
-            carla.Location(
-                x=np.float64(ros_pose.position.x),
-                y=np.float64((-1) * ros_pose.position.y),
-                z=np.float64(ros_pose.position.z),
-            ),
-            carla.Rotation(
-                pitch=np.float64(ros_pitch * (180.0 / math.pi)),
-                yaw=np.float64(ros_yaw * (180.0 / math.pi)),
-                roll=np.float64(ros_roll * (180.0 / math.pi)),
-            ),
-        )
-        return spawn_pose
 
     def update_npc(self, uuid: uuid.UUID, spawn_pose: carla.Transform) -> None:
         if uuid in self.npc_map:
