@@ -9,12 +9,7 @@ from geometry_msgs.msg import Pose, PoseWithCovarianceStamped
 import math
 import carla
 import numpy as np
-from tf_transformations import (
-    # euler_matrix,
-    # quaternion_from_matrix,
-    # quaternion_matrix,
-    euler_from_quaternion,
-)
+from tf_transformations import euler_from_quaternion
 
 
 class EgoController(Node):
@@ -23,8 +18,8 @@ class EgoController(Node):
     """
 
     def __init__(self, host="127.0.0.1", port=2000, hz=20.0):
-        super().__init__("carla_agent_controller")
-        self.get_logger().info("launch carla_agent_controller")
+        super().__init__("carla_ego_controller")
+        self.get_logger().info("launch carla_ego_controller")
 
         # connect carla
         host = self.declare_parameter("host", "127.0.0.1").value
@@ -48,25 +43,6 @@ class EgoController(Node):
             self.callback,
             10,
         )
-
-        # Transformation Matrix
-        # self.T_mgrs_carla = np.eye(4, dtype=np.float64)
-        # # rotation
-        # roll = self.declare_parameter("euler.roll", 3.141592653589793).value
-        # pitch = self.declare_parameter("euler.pitch", 0.0).value
-        # yaw = self.declare_parameter("euler.yaw", 0.0).value
-        # matrix = euler_matrix(roll, pitch, yaw, axes="sxyz").astype(np.float64)
-        # self.T_mgrs_carla = matrix
-        # # translation
-        # self.T_mgrs_carla[0][3] = self.declare_parameter(
-        #     "translation.x", -81655.015625
-        # ).value
-        # self.T_mgrs_carla[1][3] = self.declare_parameter(
-        #     "translation.y", 50135.9421875
-        # ).value
-        # self.T_mgrs_carla[2][3] = self.declare_parameter(
-        #     "translation.z", 43.09799999999389
-        # ).value
 
         # ego
         self.ego = None
@@ -104,45 +80,6 @@ class EgoController(Node):
         )
         return spawn_pose
 
-    # def get_carla_pose(self, ros_pose: Pose) -> carla.Transform:
-    #     T_mgrs_object = np.eye(4, dtype=np.float64)
-    #     q = np.array(
-    #         [
-    #             ros_pose.orientation.x,
-    #             ros_pose.orientation.y,
-    #             ros_pose.orientation.z,
-    #             ros_pose.orientation.w,
-    #         ],
-    #         dtype=np.float64,
-    #     )
-    #     T_mgrs_object = quaternion_matrix(q).astype(np.float64)
-
-    #     p = np.array(
-    #         [ros_pose.position.x, ros_pose.position.y, ros_pose.position.z],
-    #         dtype=np.float64,
-    #     )
-    #     T_mgrs_object[0:3, 3] = p
-
-    #     T_carla_object = np.eye(4, dtype=np.float64)
-    #     T_carla_object = self.T_carla_mgrs @ T_mgrs_object
-
-    #     position = T_carla_object[0:3, 3]
-    #     quaternion = quaternion_from_matrix(T_carla_object)
-    #     ros_roll, ros_pitch, ros_yaw = euler_from_quaternion(quaternion)
-    #     spawn_pose = carla.Transform(
-    #         carla.Location(
-    #             x=np.float64(position[0]),
-    #             y=np.float64(position[1]),
-    #             z=np.float64(position[2]),
-    #         ),
-    #         carla.Rotation(
-    #             pitch=np.float64(ros_pitch * (180.0 / math.pi)),
-    #             yaw=np.float64(ros_yaw * (180.0 / math.pi)),
-    #             roll=0.0,  # np.float64(ros_roll*(180.0/math.pi))
-    #         ),
-    #     )
-
-    #     return spawn_pose
 
     def update_ego_pose(self, spawn_pose: carla.Transform) -> None:
         if self.ego is None:
@@ -160,7 +97,7 @@ class EgoController(Node):
         return
 
     def destroy_node(self) -> None:
-        self.get_logger().info("Node is destroy")
+        self.get_logger().info("carla_ego_controlle_node is destroy")
         try:
             self.ego.destroy()
         except:
