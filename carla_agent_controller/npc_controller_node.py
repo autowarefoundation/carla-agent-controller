@@ -8,7 +8,6 @@ from geometry_msgs.msg import Pose
 # lib
 import uuid
 import carla
-import numpy as np
 
 # autoware
 from autoware_perception_msgs.msg import PredictedObjects

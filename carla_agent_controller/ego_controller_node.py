@@ -5,10 +5,8 @@ import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Pose, PoseWithCovarianceStamped
 
-# lib
-import math
+# carla
 import carla
-import numpy as np
 
 # util
 from carla_agent_controller.util import ros_2_carla_pose
