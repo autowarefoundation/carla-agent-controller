@@ -3,7 +3,6 @@
 # ros
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Pose
 
 # lib
 import uuid
@@ -56,7 +55,7 @@ class AgentController(Node):
         if msg.objects is None:
             self.npc_map = []
         for object in predictedObjects:
-            spawn_pose = self.ros_2_carla_pose(
+            spawn_pose = ros_2_carla_pose(
                 object.kinematics.initial_pose_with_covariance.pose
             )
             object_uuid = uuid.UUID(bytes=bytes(object.object_id.uuid))
