@@ -41,7 +41,7 @@ class AgentController(Node):
         # set subscriber
         self.subscription = self.create_subscription(
             PredictedObjects,
-            "/perception/object_recognition/objects",
+            "input_topic",
             self.callback,
             10,
         )

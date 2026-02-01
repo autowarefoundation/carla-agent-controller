@@ -38,7 +38,7 @@ class EgoController(Node):
         # set subscriber
         self.subscription = self.create_subscription(
             PoseWithCovarianceStamped,
-            "/simulation/debug/localization/pose_estimator/pose_with_covariance",
+            "input_topic",
             self.callback,
             10,
         )

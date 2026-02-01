@@ -17,6 +17,9 @@ def generate_launch_description():
                 executable="ego_controller_node",
                 name="ego_controller_node",
                 parameters=[config],
+                remappings=[
+                    ("input_topic" "/perception/object_recognition/objects",),
+                ],
             ),
             Node(
                 package="carla_agent_controller",
@@ -24,6 +27,12 @@ def generate_launch_description():
                 executable="npc_controller_node",
                 name="npc_controller_node",
                 parameters=[config],
+                remappings=[
+                    (
+                        "input_topic"
+                        "/simulation/debug/localization/pose_estimator/pose_with_covariance",
+                    ),
+                ],
             ),
         ]
     )
