@@ -73,14 +73,14 @@ class AgentController(Node):
 
     def update_npc(self, uuid: uuid.UUID, spawn_pose: carla.Transform) -> None:
         if uuid in self.npc_map:
-            self.get_logger().info("object is already spawn")
+            self.get_logger().debug("object is already spawn")
             spawn_pose.location.z = self.npc_map[uuid].get_transform().location.z
             try:
                 self.npc_map[uuid].set_transform(spawn_pose)
             except Exception as e:
                 self.get_logger().warning(f"{e}")
         else:
-            self.get_logger().info("object spawn")
+            self.get_logger().debug("spawn object")
             try:
                 spawn_pose.location.z += 1.0
                 self.npc_map[uuid] = self.world.spawn_actor(self.veh_bp, spawn_pose)
