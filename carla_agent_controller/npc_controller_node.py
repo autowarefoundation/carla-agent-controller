@@ -83,7 +83,7 @@ class AgentController(Node):
         else:
             self.get_logger().info("object spawn")
             try:
-                spawn_pose.location.z = 1.0
+                spawn_pose.location.z += 1.0
                 self.npc_map[uuid] = self.world.spawn_actor(self.veh_bp, spawn_pose)
             except Exception as e:
                 self.get_logger().warning(f"{e}")

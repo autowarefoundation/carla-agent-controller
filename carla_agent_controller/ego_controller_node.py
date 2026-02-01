@@ -54,7 +54,7 @@ class EgoController(Node):
 
     def update_ego_pose(self, spawn_pose: carla.Transform) -> None:
         if self.ego is None:
-            spawn_pose.location.z = 1.0
+            spawn_pose.location.z += 1.0
             try:
                 self.ego = self.world.spawn_actor(self.veh_bp, spawn_pose)
             except Exception as e:
