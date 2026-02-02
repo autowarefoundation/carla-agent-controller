@@ -20,7 +20,7 @@ def generate_launch_description():
                 remappings=[
                     (
                         "input_topic",
-                        "/simulation/debug/localization/pose_estimator/pose_with_covariance",
+                        "/simulation/debug/localization/pose_estimator/pose_with_covariance"
                     ),
                 ],
             ),
