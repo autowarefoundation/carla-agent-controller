@@ -38,7 +38,7 @@ def ros_2_carla_pose(ros_pose: Pose) -> carla.Transform:
         ),
         carla.Rotation(
             pitch=np.float64(ros_pitch * (180.0 / math.pi)),
-            yaw=np.float64(ros_yaw * (180.0 / math.pi)),
+            yaw=np.float64((-1) * ros_yaw * (180.0 / math.pi)),
             roll=np.float64(ros_roll * (180.0 / math.pi)),
         ),
     )
