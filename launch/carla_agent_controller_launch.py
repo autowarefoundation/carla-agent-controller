@@ -18,7 +18,10 @@ def generate_launch_description():
                 name="ego_controller_node",
                 parameters=[config],
                 remappings=[
-                    ("input_topic" "/perception/object_recognition/objects",),
+                    (
+                        "input_topic",
+                        "/simulation/debug/localization/pose_estimator/pose_with_covariance",
+                    ),
                 ],
             ),
             Node(
@@ -28,10 +31,7 @@ def generate_launch_description():
                 name="npc_controller_node",
                 parameters=[config],
                 remappings=[
-                    (
-                        "input_topic"
-                        "/simulation/debug/localization/pose_estimator/pose_with_covariance",
-                    ),
+                    ("input_topic", "/perception/object_recognition/objects"),
                 ],
             ),
         ]
