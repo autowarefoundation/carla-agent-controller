@@ -21,8 +21,8 @@ Download CARLA Simulator from [here](https://github.com/carla-simulator/carla/re
 ```
 ~/<path_to_CARLA>/CarlaUE4.sh
 ```
-[NOTE]\
-- Tested with CARLA 0.9.15. \
+[NOTE]
+- Tested with CARLA 0.9.15. 
 - For problems launching the simulator, please ask on the official CARLA community.
 
 
@@ -33,13 +33,13 @@ and check if the Autoware planning simulator launches correctly.
 source ~/<autoware_path>/install/setup.bash
 ros2 launch autoware_launch planning_simulator.launch.xml map_path:=<map_path> vehicle_model:=sample_vehicle sensor_model:=sample_sensor_kit
 ```
-[NOTE]\
-- For more details about Autoware_planning_simulator, please check [here](https://autowarefoundation.github.io/autoware-documentation/main/demos/planning-sim/). \
+[NOTE]
+- For more details about Autoware_planning_simulator, please check [here](https://autowarefoundation.github.io/autoware-documentation/main/demos/planning-sim/).
 - For problems launching the Autoware-Universe, please ask on the official Autoware foundation community or Autoware-Universe github.
 ### 3. Download CARLA Map
 1. Install CARLA lanelet2 and PCD Map([here](https://bitbucket.org/carla-simulator/autoware-contents/src/master/maps/)).
-2. Create the map folder structure in ```$HOME/autoware_map```:\
-  - Rename ```point_cloud/Town01.pcd``` → ```$HOME/autoware_map/Town01/pointcloud_map.pcd\``` \
+2. Create the map folder structure in ```$HOME/autoware_map```:
+  - Rename ```point_cloud/Town01.pcd``` → ```$HOME/autoware_map/Town01/pointcloud_map.pcd\``` 
   - Rename ```vector_maps/lanelet2/Town01.osm``` → ```$HOME/autoware_map/Town01/lanelet2_map.osm\```
 3. Create ```$HOME/autoware_map/Town01/map_projector_info.yaml with```:
 ```
@@ -51,8 +51,8 @@ projector_type: Local
 source ~/<autoware_path>/install/setup.bash
 ros2 launch autoware_launch planning_simulator.launch.xml map_path:=<CARLA_map_path> vehicle_model:=sample_vehicle sensor_model:=sample_sensor_kit
 ```
-[NOTE]\
-- Preparing Carla Mpa informations is [here](https://autowarefoundation.github.io/autoware_universe/main/simulator/autoware_carla_interface/)
+[NOTE]
+- Preparing Carla Mpa informations is [here](https://autowarefoundation.github.io/autoware_universe/main/simulator/autoware_carla_interface/).
 
 ### 4. Install This repo & build
 Download CARLA Python Package: Install CARLA 0.9.15 ROS 2 Humble communication package\
@@ -86,7 +86,7 @@ ros2 launch carla_agent_controller carla_agent_controller_launch.py
 
 ### 6. Set Ego pose and put dummy agents
 Put the Ego vehicle and other agents in Autoware planning simulator.\
-[NOTE]\
+[NOTE]
 - Place the agent in autoware planning simulator. Details are available [here](https://autowarefoundation.github.io/autoware-documentation/main/demos/planning-sim/placing-objects/#placing-interactive-dummy-objects) .
 ## Inputs
 | Name                                | Type                                            | Description                           |
@@ -96,6 +96,6 @@ Put the Ego vehicle and other agents in Autoware planning simulator.\
 
 
 ## Future Plans
-- Support pedestrian agent\
-- Synchronize traffic lights between Autoware and Carla\
+- Support pedestrian agent
+- Synchronize traffic lights between Autoware and Carla
 - Support Lanelet2 maps defined by MGRS.
