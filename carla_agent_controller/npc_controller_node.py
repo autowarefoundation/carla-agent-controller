@@ -72,6 +72,7 @@ class AgentController(Node):
                     self.npc_map[object_uuid].destroy()
                 except Exception as e:
                     self.get_logger().warning(f"{e}")
+                self.npc_map.pop(object_uuid, None)
 
         return
 
