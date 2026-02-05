@@ -16,7 +16,7 @@ This package is a ROS2 bridge to control **CARLA** agent(ego vehicle & NPCs) fro
 * **Python:** 3.10.12
 
 ### 1. Download CARLA Simulator 
-Download CARLA Simulator from [here](https://github.com/carla-simulator/carla/releases/tag/0.9.15/) and check if the simulator launches correctly. 
+Download CARLA Simulator from [CARLA-0.9.15](https://github.com/carla-simulator/carla/releases/tag/0.9.15/) and check if the simulator launches correctly. 
 ```
 ~/<path_to_CARLA>/CarlaUE4.sh
 ```
@@ -26,7 +26,7 @@ Download CARLA Simulator from [here](https://github.com/carla-simulator/carla/re
 
 
 ### 2. Install Autoware universe package
-Install Autoware-Universe from [here](https://autowarefoundation.github.io/autoware-documentation/main/installation/)
+Install Autoware-Universe from [autoware installation documents](https://autowarefoundation.github.io/autoware-documentation/main/installation/)
 and check if the Autoware planning simulator launches correctly. 
 ```
 source ~/<autoware_path>/install/setup.bash
@@ -36,7 +36,7 @@ ros2 launch autoware_launch planning_simulator.launch.xml map_path:=<map_path> v
 - For more details about Autoware_planning_simulator, please check [here](https://autowarefoundation.github.io/autoware-documentation/main/demos/planning-sim/).
 - For problems launching the Autoware-Universe, please ask on the official Autoware foundation community or Autoware-Universe github.
 ### 3. Download CARLA Map
-1. Install CARLA lanelet2 and PCD Map([here](https://bitbucket.org/carla-simulator/autoware-contents/src/master/maps/)).
+1. Install CARLA lanelet2 and PCD Map([CARLA Map](https://bitbucket.org/carla-simulator/autoware-contents/src/master/maps/)).
 2. Create the map folder structure in ```$HOME/autoware_map```:
   - Rename ```point_cloud/Town01.pcd``` → ```$HOME/autoware_map/Town01/pointcloud_map.pcd\``` 
   - Rename ```vector_maps/lanelet2/Town01.osm``` → ```$HOME/autoware_map/Town01/lanelet2_map.osm\```
@@ -54,9 +54,11 @@ ros2 launch autoware_launch planning_simulator.launch.xml map_path:=<CARLA_map_p
 - Preparing Carla Map informations is [here](https://autowarefoundation.github.io/autoware_universe/main/simulator/autoware_carla_interface/).
 
 ### 4. Install This repo & build
-Download CARLA Python Package: Install CARLA 0.9.15 ROS 2 Humble communication package\
-- Option A: Install the wheel using pip\
-- Option B: Add the egg file to your PYTHONPATH\
+1. Install CARLA Python Package: [Install CARLA 0.9.15 ROS 2 Humble communication package](https://github.com/gezp/carla_ros/releases/tag/carla-0.9.15-ubuntu-22.04)
+- Option A: Install the wheel using pip
+- Option B: Add the egg file to your PYTHONPATH
+
+2. build this repo.
 ```
 mkdir -p ~/ros2_ws/src/
 cd ~/ros2_ws/src/
