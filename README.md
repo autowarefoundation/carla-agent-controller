@@ -28,6 +28,7 @@ Download CARLA Simulator from [here](https://github.com/carla-simulator/carla/re
 Install Autoware-Universe from [here](https://autowarefoundation.github.io/autoware-documentation/main/installation/)
 and check if the Autoware planning simulator launches correctly. 
 ```
+source ~/<autoware_path>/install/setup.bash
 ros2 launch autoware_launch planning_simulator.launch.xml map_path:=<map_path> vehicle_model:=sample_vehicle sensor_model:=sample_sensor_kit
 ```
 [NOTE]\
@@ -57,6 +58,7 @@ colcon build
 ```
 ```
 ### Terminal 2: Launch Autoware planning simulator.
+source ~/<autoware_path>/install/setup.bash
 ros2 launch autoware_launch planning_simulator.launch.xml map_path:=<your_CARLA_map_path> vehicle_model:=sample_vehicle sensor_model:=sample_sensor_kit
 ```
 ```
