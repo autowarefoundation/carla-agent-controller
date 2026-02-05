@@ -8,7 +8,7 @@ This package is a ROS2 bridge to control **CARLA** agent(ego vehicle & NPCs) fro
 
 ## How to Use
 ### Requirements
-Tested on (Other enviroments may work, but are not tested).
+#### Tested (Other enviroments may work, but are not tested).
 * **OS:** Ubuntu 22.04 LTS
 * **GPU:** NVIDIA GeForce RTX 3060 Mobile
 * **CPU:** 12th Gen Intel(R) Core(TM) i7-12700H
@@ -51,7 +51,7 @@ source ~/<autoware_path>/install/setup.bash
 ros2 launch autoware_launch planning_simulator.launch.xml map_path:=<CARLA_map_path> vehicle_model:=sample_vehicle sensor_model:=sample_sensor_kit
 ```
 [NOTE]
-- Preparing Carla Mpa informations is [here](https://autowarefoundation.github.io/autoware_universe/main/simulator/autoware_carla_interface/).
+- Preparing Carla Map informations is [here](https://autowarefoundation.github.io/autoware_universe/main/simulator/autoware_carla_interface/).
 
 ### 4. Install This repo & build
 Download CARLA Python Package: Install CARLA 0.9.15 ROS 2 Humble communication package\
@@ -62,7 +62,7 @@ mkdir -p ~/ros2_ws/src/
 cd ~/ros2_ws/src/
 git clone https://github.com/tier4/carla-agent-controller.git
 cd ../
-pip3 install carla==0.9.15 # 
+rosdep install 
 colcon build
 ```
 
