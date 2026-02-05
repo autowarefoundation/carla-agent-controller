@@ -4,7 +4,7 @@
     host: "127.0.0.1"
     port: 2000
     hz: 20.0
-    time_out: 30.0
+    time_out: 300.0
     map: "Town01" # [Town01, Town02, Town03, Town04, Town05, Town06, Town07]
 
 
