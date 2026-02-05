@@ -32,7 +32,6 @@ source ~/<autoware_path>/install/setup.bash
 ros2 launch autoware_launch planning_simulator.launch.xml map_path:=<map_path> vehicle_model:=sample_vehicle sensor_model:=sample_sensor_kit
 ```
 [NOTE]\
-・Source installation is tested \
 ・For more details about Autoware_planning_simulator, please check [here](https://autowarefoundation.github.io/autoware-documentation/main/demos/planning-sim/). \
 ・For problems launching the Autoware-Universe, please ask on the official Autoware foundation community or Autoware-Universe github.
 ### 3. Download CARLA Map
@@ -45,7 +44,7 @@ ros2 launch autoware_launch planning_simulator.launch.xml map_path:=<CARLA_map_p
 ### 4. Install This repo & build
 ```
 mkdir -p ~/ros2_ws/src/
-git clone https://github.com/tier4/carla-agent-controller.git ~/ros2_ws/src/
+git clone https://github.com/tier4/carla-agent-controller.git ~/ros2_ws/src/carla-agent-controller
 cd ~/ros2_ws
 pip3 install carla==0.9.15 # recommend to install the same version as the CARLA simulator. 
 colcon build
