@@ -1,7 +1,10 @@
 # Autoware-CARLA-Agent-Controller
 This package is a ROS bridge to control CARLA agent(Ego & NPC) from Autoware.
 ## Overview
-  todo : add fig & Gif
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/890121b4-56c4-4106-b80d-4e91d3d10ae4" width="49%" />
+  <img src="https://github.com/user-attachments/assets/79a2e4ae-f6a9-4df3-99e6-2a8c55a91558" width="49%" /> 
+</p>
 
 ## How to use
 ### requirement
