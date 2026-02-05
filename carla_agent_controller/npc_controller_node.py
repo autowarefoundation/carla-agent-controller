@@ -12,12 +12,16 @@ import carla
 from autoware_perception_msgs.msg import PredictedObjects
 
 # util
-from carla_agent_controller.util import connect_to_carla, ros_2_carla_pose
+from carla_agent_controller.util import connect_to_carla, ros_pose_to_carla_transform
 
 
 class AgentController(Node):
     """
-    to do: add documentation
+    This node controls CARLA agent(NPC) from Autoware. Moves agent at the received pose.
+    input_topic：
+        Agent Pose(/perception/object_recognition/objects)
+    Attributes:
+        npc_map (Dict[uuid.UUID, carla.Vehicle]): Dictionary mapping UUIDs to CARLA agent instances..
     """
 
     def __init__(self):
@@ -55,7 +59,7 @@ class AgentController(Node):
         if msg.objects is None:
             self.npc_map = {}
         for object in predictedObjects:
-            spawn_pose = ros_2_carla_pose(
+            spawn_pose = ros_pose_to_carla_transform(
                 object.kinematics.initial_pose_with_covariance.pose
             )
             object_uuid = uuid.UUID(bytes=bytes(object.object_id.uuid))

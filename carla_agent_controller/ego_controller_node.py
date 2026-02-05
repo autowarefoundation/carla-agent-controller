@@ -17,7 +17,11 @@ from typing import Optional
 
 class EgoController(Node):
     """
-    to do: add documentation
+    This node controls CARLA objects from Autoware. Moves ego vehicle at the received pose.
+    input_topic：
+        Ego Vechile Pose(/simulation/debug/localization/pose_estimator/pose_with_covariance)
+    Attributes:
+        ego (carla.Vehicle): Carla actor instance representing the ego vehicle.
     """
 
     def __init__(self):
