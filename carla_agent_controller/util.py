@@ -43,6 +43,3 @@ def ros_pose_to_carla_transform(ros_pose: Pose) -> carla.Transform:
         ),
     )
     return spawn_pose
-
-
-# todo: add rosMgrs_to_CarlaPose
