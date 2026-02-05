@@ -64,7 +64,7 @@ ros2 launch carla_agent_controller carla_agent_controller_launch.py
 ```
 
 ### 6. Set Ego pose and put dummy agents
-Put the Ego vehicle and other agents
+Put the Ego vehicle and other agents in Autoware planning simulator
 [NOTE]\
 ・Place the agent in autoware plannign simulator. Details is [here](https://autowarefoundation.github.io/autoware-documentation/main/demos/planning-sim/placing-objects/#placing-interactive-dummy-objects) 
 
