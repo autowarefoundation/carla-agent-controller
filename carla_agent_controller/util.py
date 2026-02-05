@@ -17,7 +17,7 @@ def connect_to_carla(
     return client, world, bp_lib
 
 
-def ros_2_carla_pose(ros_pose: Pose) -> carla.Transform:
+def ros_pose_to_carla_transform(ros_pose: Pose) -> carla.Transform:
     quaternion = np.array(
         [
             ros_pose.orientation.x,

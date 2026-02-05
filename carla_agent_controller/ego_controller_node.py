@@ -9,7 +9,7 @@ from geometry_msgs.msg import PoseWithCovarianceStamped
 import carla
 
 # util
-from carla_agent_controller.util import connect_to_carla, ros_2_carla_pose
+from carla_agent_controller.util import connect_to_carla, ros_pose_to_carla_transform
 
 # any
 from typing import Optional
@@ -54,7 +54,7 @@ class EgoController(Node):
         self.ego: Optional[carla.Vehicle] = None
 
     def callback(self, msg: PoseWithCovarianceStamped) -> None:
-        spawn_pose = ros_2_carla_pose(msg.pose.pose)
+        spawn_pose = ros_pose_to_carla_transform(msg.pose.pose)
         self.update_ego_pose(spawn_pose)
 
         return
