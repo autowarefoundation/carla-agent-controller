@@ -13,6 +13,8 @@ Tested on
 * **GPU:** NVIDIA GeForce RTX 3060 Mobile
 * **CPU:** 12th Gen Intel(R) Core(TM) i7-12700H
 * **Middleware:** ROS 2 Humble
+* **Python:** 3.10.12
+
 
 ### 1．Download CARLA Simulator 
 Download CARLA Simulator from [here](https://github.com/carla-simulator/carla/releases/tag/0.9.15/) and check if the simulator launches correctly. 
