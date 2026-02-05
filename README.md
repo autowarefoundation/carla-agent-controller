@@ -11,7 +11,8 @@ Tested on
 * **CPU:** 12th Gen Intel(R) Core(TM) i7-12700H
 * **Middleware:** ROS 2 Humble
 
-### 1．Download CARLA Simulator from [here](https://github.com/carla-simulator/carla/releases/tag/0.9.15/) and check if the simulator launches correctly. 
+### 1．Download CARLA Simulator 
+Download CARLA Simulator from [here](https://github.com/carla-simulator/carla/releases/tag/0.9.15/) and check if the simulator launches correctly. 
 ```
 ~/<path_to_CARLA>/CarlaUE4.sh
 ```
@@ -21,7 +22,7 @@ Tested on
 
 
 ### 2．Install Autoware universe package
-Install Autoware-Universe([Link](https://autowarefoundation.github.io/autoware-documentation/main/installation/)) 
+Install Autoware-Universe from [here](https://autowarefoundation.github.io/autoware-documentation/main/installation/)
 and check if the Autoware planning simulator launches correctly. 
 ```
 ros2 launch autoware_launch planning_simulator.launch.xml map_path:=<map_path> vehicle_model:=sample_vehicle sensor_model:=sample_sensor_kit
@@ -34,6 +35,7 @@ ros2 launch autoware_launch planning_simulator.launch.xml map_path:=<map_path> v
 Install CARLA lanelet2 and PCD Map([here](https://bitbucket.org/carla-simulator/autoware-contents/src/master/maps/))
 and please check CARLA map is displayed in Rviz with Autoware planning simulator.
 ```
+source ~/<autoware_path>/install/setup.bash
 ros2 launch autoware_launch planning_simulator.launch.xml map_path:=<CARLA_map_path> vehicle_model:=sample_vehicle sensor_model:=sample_sensor_kit
 ```
 ### 4. Install This repo & build
@@ -41,7 +43,7 @@ ros2 launch autoware_launch planning_simulator.launch.xml map_path:=<CARLA_map_p
 mkdir -p ~/ros2_ws/src/
 git clone https://github.com/tier4/carla-agent-controller.git ~/ros2_ws/src/
 cd ~/ros2_ws
-pip3 install carla==0.9.15 # recommend to install the same version as the simulator. 
+pip3 install carla==0.9.15 # recommend to install the same version as the CARLA simulator. 
 colcon build
 ```
 
