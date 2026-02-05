@@ -1,5 +1,5 @@
 # Autoware-CARLA-Agent-Controller
-This package is a ROS2 bridge to control CARLA agent(ego vehicle & NPCs) from Autoware.
+This package is a ROS2 bridge to control **CARLA** agent(ego vehicle & NPCs) from **Autoware**.
 ## Overview
 <p float="left">
   <img src="https://github.com/user-attachments/assets/890121b4-56c4-4106-b80d-4e91d3d10ae4" width="49%" />
@@ -8,13 +8,12 @@ This package is a ROS2 bridge to control CARLA agent(ego vehicle & NPCs) from Au
 
 ## How to Use
 ### Requirements
-Tested on
+Tested on (Other enviroments may work, but are not tested).
 * **OS:** Ubuntu 22.04 LTS
 * **GPU:** NVIDIA GeForce RTX 3060 Mobile
 * **CPU:** 12th Gen Intel(R) Core(TM) i7-12700H
 * **Middleware:** ROS 2 Humble
 * **Python:** 3.10.12
-
 
 ### 1. Download CARLA Simulator 
 Download CARLA Simulator from [here](https://github.com/carla-simulator/carla/releases/tag/0.9.15/) and check if the simulator launches correctly. 
