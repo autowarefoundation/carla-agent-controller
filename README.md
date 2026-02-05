@@ -100,3 +100,7 @@ Put the Ego vehicle and other agents in Autoware planning simulator.\
 - Support pedestrian agent
 - Synchronize traffic lights between Autoware and Carla
 - Support Lanelet2 maps defined by MGRS.
+
+## Links to Related Documents
+- [Autoware](https://autoware.org/)
+- [CARLA](https://carla.org/)
