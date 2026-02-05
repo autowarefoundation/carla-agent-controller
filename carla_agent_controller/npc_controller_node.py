@@ -47,13 +47,13 @@ class AgentController(Node):
         )
 
         # for managing the state of NPC
-        self.npc_map = {}
+        self.npc_map: dict[uuid.UUID, carla.Vehicle] = {}
 
     def callback(self, msg: PredictedObjects) -> None:
         predictedObjects = msg.objects
         msg_uuid_set = set()
         if msg.objects is None:
-            self.npc_map = []
+            self.npc_map = {}
         for object in predictedObjects:
             spawn_pose = ros_2_carla_pose(
                 object.kinematics.initial_pose_with_covariance.pose

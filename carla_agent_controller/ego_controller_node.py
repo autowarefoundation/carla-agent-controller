@@ -11,6 +11,9 @@ import carla
 # util
 from carla_agent_controller.util import connect_to_carla, ros_2_carla_pose
 
+# any
+from typing import Optional
+
 
 class EgoController(Node):
     """
@@ -44,7 +47,7 @@ class EgoController(Node):
         )
 
         # ego
-        self.ego = None
+        self.ego: Optional[carla.Vehicle] = None
 
     def callback(self, msg: PoseWithCovarianceStamped) -> None:
         spawn_pose = ros_2_carla_pose(msg.pose.pose)
