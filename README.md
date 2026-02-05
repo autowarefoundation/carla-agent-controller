@@ -44,8 +44,9 @@ ros2 launch autoware_launch planning_simulator.launch.xml map_path:=<CARLA_map_p
 ### 4. Install This repo & build
 ```
 mkdir -p ~/ros2_ws/src/
-git clone https://github.com/tier4/carla-agent-controller.git ~/ros2_ws/src/carla-agent-controller
-cd ~/ros2_ws
+cd ~/ros2_ws/src/
+git clone https://github.com/tier4/carla-agent-controller.git
+cd ../
 pip3 install carla==0.9.15 # recommend to install the same version as the CARLA simulator. 
 colcon build
 ```
@@ -63,7 +64,7 @@ ros2 launch autoware_launch planning_simulator.launch.xml map_path:=<your_CARLA_
 ```
 ### Terminal 3: Launch this repo.
 source ~/<autoware_path>/install/setup.bash
-source ~/ros2_ws/install/setup.ash
+source ~/ros2_ws/install/setup.bash
 ros2 launch carla_agent_controller carla_agent_controller_launch.py
 ```
 
@@ -71,7 +72,6 @@ ros2 launch carla_agent_controller carla_agent_controller_launch.py
 Put the Ego vehicle and other agents in Autoware planning simulator\
 [NOTE]\
 ・Place the agent in autoware plannign simulator. Details is [here](https://autowarefoundation.github.io/autoware-documentation/main/demos/planning-sim/placing-objects/#placing-interactive-dummy-objects) 
-・prediction.launch.xml →　default = simpl
 ## Inputs
 | Name                                | Type                                            | Description                           |
 | ----------------------------------- | ----------------------------------------------- | ------------------------------------- |
