@@ -47,7 +47,7 @@ pip3 install carla==0.9.15 # recommend to install the same version as the CARLA 
 colcon build
 ```
 
-### 5. launch related package
+### 5. launch related packages
 ```
 ### Terminal 1: Launch CARLA simulator.
 ~/<path_to_CARLA>/CarlaUE4.sh
@@ -64,10 +64,10 @@ ros2 launch carla_agent_controller carla_agent_controller_launch.py
 ```
 
 ### 6. Set Ego pose and put dummy agents
-Put the Ego vehicle and other agents in Autoware planning simulator
+Put the Ego vehicle and other agents in Autoware planning simulator\
 [NOTE]\
 ・Place the agent in autoware plannign simulator. Details is [here](https://autowarefoundation.github.io/autoware-documentation/main/demos/planning-sim/placing-objects/#placing-interactive-dummy-objects) 
-
+・prediction.launch.xml →　default = simpl
 ## Inputs
 | Name                                | Type                                            | Description                           |
 | ----------------------------------- | ----------------------------------------------- | ------------------------------------- |
