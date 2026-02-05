@@ -66,7 +66,7 @@ class AgentController(Node):
             msg_uuid_set.add(object_uuid)
             self.update_npc(object_uuid, spawn_pose)
 
-        for object_uuid in self.npc_map.keys():
+        for object_uuid in list(self.npc_map):
             if object_uuid not in msg_uuid_set:
                 try:
                     self.npc_map[object_uuid].destroy()
@@ -77,7 +77,7 @@ class AgentController(Node):
         return
 
     def update_npc(self, uuid: uuid.UUID, spawn_pose: carla.Transform) -> None:
-        if uuid in self.npc_map:
+        if uuid in list(self.npc_map):
             self.get_logger().debug("object is already spawn")
             spawn_pose.location.z = self.npc_map[uuid].get_transform().location.z
             try:
