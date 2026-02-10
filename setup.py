@@ -1,11 +1,10 @@
-from setuptools import find_packages, setup
+from setuptools import setup
 
 package_name = "carla_agent_controller"
 
 setup(
     name=package_name,
     version="1.0.0",
-    # packages=find_packages(exclude=['test']),
     packages=[package_name],
     data_files=[
         ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
