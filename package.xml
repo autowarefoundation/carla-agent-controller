@@ -4,7 +4,7 @@
   <name>carla_agent_controller</name>
   <version>1.0.0</version>
   <description>carla_agent_controller with Autoware</description>
-  <maintainer email="kazushi.fujimoto2@tier4.jp">kazushifujimoto</maintainer>
+  <maintainer email="kazushi.fujimoto.2@tier4.jp">kazushifujimoto</maintainer>
   <license>Apache License 2.0</license>
 
   <exec_depend>python3-numpy</exec_depend>

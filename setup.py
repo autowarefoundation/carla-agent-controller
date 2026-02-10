@@ -17,8 +17,8 @@ setup(
     ],
     install_requires=["setuptools"],
     zip_safe=True,
-    maintainer="kazushifujimoto2",
-    maintainer_email="kazushifujimoto2@tier4.jp",
+    maintainer="KazushiFujimoto",
+    maintainer_email="kazushi.fujimoto.2@tier4.jp",
     description="carla_agent_controller with Autoware",
     license="Apache License 2.0",
     entry_points={
