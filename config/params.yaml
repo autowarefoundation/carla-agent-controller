@@ -1,0 +1,18 @@
+#carla_agent_controller:
+/carla_agent_controller/**:
+  ros__parameters:
+    host: "127.0.0.1"
+    port: 2000
+    time_out: 300.0
+    map: "Town01" # [Town01, Town02, Town03, Town04, Town05, Town06, Town07]
+
+
+# set calrla vehicle model
+# For more details: https://carla.readthedocs.io/en/latest/catalogue_vehicles/
+/carla_agent_controller/ego_controller_node:
+  ros__parameters:
+    vehicle_model: "vehicle.toyota.prius"
+
+/carla_agent_controller/npc_controller_node:
+  ros__parameters:
+    vehicle_model: "vehicle.tesla.model3"
