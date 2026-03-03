@@ -95,6 +95,17 @@ Put the Ego vehicle and other agents in Autoware planning simulator.\
 | `/simulation/debug/localization/pose_estimator/pose_with_covariance`          | `geometry_msgs::msg::PoseWithCovarianceStamped` | Ego pose                          |
 | `/perception/object_recognition/objects` | `autoware_perception_msgs::msg::PredictedObjects`   | Objects Pose |
 
+### 7. Traffic light synchronization
+Set the traffic light in Autoware planning simulator.\
+[NOTE]
+- Please set the traffic light coordinates in the configuration based on the coordinate system defined in projector.info.yaml and the IDs/locations found in lanelet2.osm.
+- Place the agent in autoware planning simulator. Details are available [here](https://autowarefoundation.github.io/autoware-documentation/main/demos/planning-sim/placing-objects/#placing-interactive-dummy-objects) .
+## Inputs
+| Name                                | Type                                            | Description                           |
+| ----------------------------------- | ----------------------------------------------- | ------------------------------------- |
+| `/simulation/debug/localization/pose_estimator/pose_with_covariance`          | `geometry_msgs::msg::PoseWithCovarianceStamped` | Ego pose                          |
+| `/perception/object_recognition/objects` | `autoware_perception_msgs::msg::PredictedObjects`   | Objects Pose |
+| `/perception/traffic_light_recognition/traffic_signals` | `autoware_perception_msgs::msg::TrafficLightGroupArray`   | Traffic light status|
 
 ## Future Plans
 - Support pedestrian agent
