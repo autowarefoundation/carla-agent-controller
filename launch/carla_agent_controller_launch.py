@@ -33,5 +33,15 @@ def generate_launch_description():
                     ("input_topic", "/perception/object_recognition/objects"),
                 ],
             ),
+            Node(
+                package="carla_agent_controller",
+                namespace="carla_agent_controller",
+                executable="trafficlight_synchronizer_node",
+                name="trafficlight_synchronizer_node",
+                parameters=[config],
+                remappings=[
+                    ("input_topic", "/perception/traffic_light_recognition/traffic_signals"),
+                ],
+            ),
         ]
     )

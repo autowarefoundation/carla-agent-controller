@@ -25,6 +25,7 @@ setup(
         "console_scripts": [
             "npc_controller_node = carla_agent_controller.npc_controller_node:main",
             "ego_controller_node = carla_agent_controller.ego_controller_node:main",
+            "trafficlight_synchronizer_node = carla_agent_controller.trafficlight_synchronizer:main",
         ],
     },
 )

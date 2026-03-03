@@ -16,3 +16,9 @@
 /carla_agent_controller/npc_controller_node:
   ros__parameters:
     vehicle_model: "vehicle.tesla.model3"
+
+/carla_agent_controller/trafficlight_synchronizer_node:
+  ros__parameters:
+    #### caution: carla map is invert the y-axis. Note: lane: [94.5674, -205.918] in lanelet2 file →　id_3598: [94.5674, 205.918]
+    target_traffic_lights:
+      id_3598: [94.5674, 205.918]
