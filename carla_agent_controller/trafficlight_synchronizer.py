@@ -1,41 +1,42 @@
 #!/usr/bin/env python3
+import carla
 
 # ros
 import rclpy
 from rclpy.node import Node
-
-# carla
-import carla
-
-# util
-import numpy as np
-from carla_agent_controller.util import connect_to_carla
+from rclpy.qos import QoSProfile, DurabilityPolicy
+import lanelet2
 
 # autoware
+from autoware_map_msgs.msg import LaneletMapBin
 from autoware_perception_msgs.msg import TrafficLightGroupArray
+
+# util
+from carla_agent_controller.util import connect_to_carla
+import numpy as np
+
+# any
+import tempfile
 
 
 class TrafficLightSynchronizer(Node):
-    """
-        This node synchronize Autoware and carla traffic light.
-    Subscribes:
-        /perception/traffic_light_recognition/traffic_signals (TrafficLightGroupArray)
-            for synchronizing traffic light color.
-    """
-
     def __init__(self):
-        super().__init__(
-            "carla_trafficlight_synchronizer",
-            allow_undeclared_parameters=True,
-            automatically_declare_parameters_from_overrides=True,
-        )
+        super().__init__("carla_trafficlight_synchronizer")
         self.get_logger().info("launch carla_trafficlight_synchronizer")
 
+        #  get lanelet2_bin and compute traffic_light cordinates
+        lanelet2_map_bin = self._wait_for_map_message()
+        self.traffic_light_points = self.search_traffic_light(lanelet2_map_bin)
+        self.get_logger().info(
+            f"Initialized with {len(self.traffic_light_points)} traffic light points."
+        )
+        self.get_logger().info(f"Initialized with {self.traffic_light_points}")
+
         # load param
-        host = self.get_parameter("host").value
-        port = self.get_parameter("port").value
-        time_out = self.get_parameter("time_out").value
-        map_name = self.get_parameter("map").value
+        host = self.declare_parameter("host", "").value
+        port = self.declare_parameter("port", 0).value
+        time_out = self.declare_parameter("time_out", 0.0).value
+        map_name = self.declare_parameter("map", "").value
 
         # load carla simulator
         self.client, self.world, _dummy = connect_to_carla(
@@ -54,34 +55,75 @@ class TrafficLightSynchronizer(Node):
             self.callback,
             10,
         )
-
-        # set traffic_right
         self.color_map = {
             1: carla.TrafficLightState.Red,
             2: carla.TrafficLightState.Yellow,
             3: carla.TrafficLightState.Green,
         }
 
-        # create lanelet2_traffic id to carla map
-        self.get_logger().info(f"create right map")
-        self.trafficlight_dict = self.get_parameters_by_prefix("target_traffic_lights")
+        # self.trafficlight_dict = self.get_parameters_by_prefix("target_traffic_lights")
         self.light_map = {}
-        for key, val in self.trafficlight_dict.items():
-            id = key.replace("id_", "")
-            target_xy = val.value
-            closest_tl = self.find_closest_light(target_xy, self.carla_traffic_lights)
+        for data in self.traffic_light_points:
+            id = data["id"]
+            target_xy = [data["x"], (-1*data["y"])] # invert the y-axis.
+            closest_tl = self.find_closest_light(target_xy)
             if closest_tl:
                 self.light_map[id] = closest_tl
                 self.get_logger().info(
                     f"Lanelet id {id} to CARLA Actor {closest_tl.id}"
                 )
 
-    def find_closest_light(self, target_xy, carla_lights):
+    def _wait_for_map_message(self):
+        self.received_msg = []
+        qos = QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL)
+        sub = self.create_subscription(
+            LaneletMapBin, "input_lanelet", self.lanelet_callback, qos
+        )
+
+        self.get_logger().info("Waiting for LaneletMapBin on /map/vector_map...")
+        while rclpy.ok() and not self.received_msg:
+            rclpy.spin_once(self, timeout_sec=0.1)
+
+        self.destroy_subscription(sub)
+        return self.received_msg[0]
+
+    def lanelet_callback(self, msg):
+        self.received_msg.append(msg)
+
+    def search_traffic_light(self, map_bin):
+        self.get_logger().info("Starting map analysis via subprocess...")
+
+        with tempfile.NamedTemporaryFile(suffix=".bin", delete=True) as temp_map:
+            # create temp file
+            temp_map.write(bytes(map_bin.data))
+            temp_map.flush()
+
+            # load  laneletmap
+            projector = lanelet2.projection.UtmProjector(lanelet2.io.Origin(0, 0))
+            l_map = lanelet2.io.load(temp_map.name, projector)
+
+        points = []
+        for reg_el in l_map.regulatoryElementLayer:
+            if isinstance(reg_el, lanelet2.core.TrafficLight):
+                for light in reg_el.trafficLights:
+                    for pt in light:
+                        points.append(
+                            {
+                                "id": int(reg_el.id),
+                                "x": float(pt.x),
+                                "y": float(pt.y),
+                                "z": float(pt.z),
+                            }
+                        )
+
+        return points
+
+    def find_closest_light(self, target_xy):
         min_dist = float("inf")
         closest_actor = None
 
         # search carla-trafficlight
-        for tl in carla_lights:
+        for tl in self.carla_traffic_lights:
             tl_loc = tl.get_transform().location
             dist = np.sqrt(
                 (tl_loc.x - target_xy[0]) ** 2 + (tl_loc.y - target_xy[1]) ** 2
@@ -110,10 +152,6 @@ class TrafficLightSynchronizer(Node):
                     f"Sync: ID {lanelet_trafficright_id} set to {color} in CARLA"
                 )
 
-        return
-
-    def destroy_node(self) -> None:
-        self.get_logger().info("carla_trafficlight_synchronizer is destroy")
         return
 
 

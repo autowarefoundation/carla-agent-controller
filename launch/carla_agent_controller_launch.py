@@ -40,7 +40,9 @@ def generate_launch_description():
                 name="trafficlight_synchronizer_node",
                 parameters=[config],
                 remappings=[
-                    ("input_topic", "/perception/traffic_light_recognition/traffic_signals"),
+                    ("input_trafficlight", "/perception/traffic_light_recognition/traffic_signals"),
+                    ("input_lanelet", "/map/vector_map"),
+                    ("input_projector_info_yaml", "/map/map_projector_info"),
                 ],
             ),
         ]
