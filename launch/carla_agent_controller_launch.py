@@ -42,7 +42,7 @@ def generate_launch_description():
                 remappings=[
                     ("input_trafficlight", "/perception/traffic_light_recognition/traffic_signals"),
                     ("input_lanelet", "/map/vector_map"),
-                    ("input_projector_info_yaml", "/map/map_projector_info"),
+                    ("input_projector_info", "/map/map_projector_info"),
                 ],
             ),
         ]

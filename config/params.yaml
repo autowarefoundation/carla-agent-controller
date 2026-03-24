@@ -5,6 +5,7 @@
     port: 2000
     time_out: 300.0
     map: "Town01" # [Town01, Town02, Town03, Town04, Town05, Town06, Town07]
+    use_y_inversion: true
 
 
 # set calrla vehicle model

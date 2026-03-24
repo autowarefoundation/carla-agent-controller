@@ -5,10 +5,14 @@ import carla
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, DurabilityPolicy
+
+# lanelet2
 import lanelet2
+# from lanelet2.projection import UtmProjector, MgrsProjector
+from lanelet2.io import Origin, load
 
 # autoware
-from autoware_map_msgs.msg import LaneletMapBin
+from autoware_map_msgs.msg import LaneletMapBin, MapProjectorInfo
 from autoware_perception_msgs.msg import TrafficLightGroupArray
 
 # util
@@ -25,6 +29,11 @@ class TrafficLightSynchronizer(Node):
         self.get_logger().info("launch carla_trafficlight_synchronizer")
 
         #  get lanelet2_bin and compute traffic_light cordinates
+        self.projector_info = self._wait_for_map_projector_info()
+        self.get_logger().info(
+            f"Projector info  {self.projector_info}."
+        )
+
         lanelet2_map_bin = self._wait_for_map_message()
         self.traffic_light_points = self.search_traffic_light(lanelet2_map_bin)
         self.get_logger().info(
@@ -37,6 +46,7 @@ class TrafficLightSynchronizer(Node):
         port = self.declare_parameter("port", 0).value
         time_out = self.declare_parameter("time_out", 0.0).value
         map_name = self.declare_parameter("map", "").value
+        self.use_y_inversion = self.declare_parameter("use_y_inversion", False).value
 
         # load carla simulator
         self.client, self.world, _dummy = connect_to_carla(
@@ -47,14 +57,6 @@ class TrafficLightSynchronizer(Node):
             "traffic.traffic_light"
         )
 
-        # set subscriber
-        self.get_logger().info(f"Set subscriber")
-        self.subscription = self.create_subscription(
-            TrafficLightGroupArray,
-            "input_topic",
-            self.callback,
-            10,
-        )
         self.color_map = {
             1: carla.TrafficLightState.Red,
             2: carla.TrafficLightState.Yellow,
@@ -65,13 +67,54 @@ class TrafficLightSynchronizer(Node):
         self.light_map = {}
         for data in self.traffic_light_points:
             id = data["id"]
-            target_xy = [data["x"], (-1*data["y"])] # invert the y-axis.
+            if(self.use_y_inversion):
+                target_xy = [data["x"], (-1*data["y"])] # invert the y-axis.
+            else:
+                target_xy = [data["x"], (data["y"])]
             closest_tl = self.find_closest_light(target_xy)
             if closest_tl:
                 self.light_map[id] = closest_tl
                 self.get_logger().info(
                     f"Lanelet id {id} to CARLA Actor {closest_tl.id}"
                 )
+        
+        # set subscriber
+        self.get_logger().info(f"Set subscriber")
+        self.subscription = self.create_subscription(
+            TrafficLightGroupArray,
+            "input_trafficlight",
+            self.callback,
+            10,
+        )
+
+    def _wait_for_map_projector_info(self):
+        self._received_map_msg = None
+    
+        qos = QoSProfile(
+            depth=1, 
+            durability=DurabilityPolicy.TRANSIENT_LOCAL
+        )
+    
+        sub = self.create_subscription(
+            MapProjectorInfo, 
+            "input_projector_info", 
+            self._map_callback, 
+            qos
+        )
+
+        self.get_logger().info("Waiting for LaneletMapBin to extract ProjectorInfo...")
+    
+        while rclpy.ok():
+            if self._received_map_msg is not None:
+                break
+            rclpy.spin_once(self, timeout_sec=0.1)
+
+        self.destroy_subscription(sub)
+
+        return self._received_map_msg
+
+    def _map_callback(self, msg):
+        self._received_map_msg = msg
 
     def _wait_for_map_message(self):
         self.received_msg = []
@@ -99,8 +142,19 @@ class TrafficLightSynchronizer(Node):
             temp_map.flush()
 
             # load  laneletmap
-            projector = lanelet2.projection.UtmProjector(lanelet2.io.Origin(0, 0))
-            l_map = lanelet2.io.load(temp_map.name, projector)
+            if self.projector_info.projector_type == "Local":
+                projector = lanelet2.projection.UtmProjector(Origin(
+                    self.projector_info.map_origin.latitude,
+                    self.projector_info.map_origin.longitude,
+                    self.projector_info.map_origin.altitude))
+            elif self.projector_info.projector_type == "MGRS":
+                projector = lanelet2.projection.LocalCartesianProjector(Origin(
+                    self.projector_info.map_origin.latitude,
+                    self.projector_info.map_origin.longitude,
+                    self.projector_info.map_origin.altitude))
+            else:
+                raise ValueError(f"Unknown projector type: {self.projector_info.projector_type}")
+            l_map = load(temp_map.name, projector)
 
         points = []
         for reg_el in l_map.regulatoryElementLayer:
@@ -115,6 +169,7 @@ class TrafficLightSynchronizer(Node):
                                 "z": float(pt.z),
                             }
                         )
+                        break
 
         return points
 
@@ -141,7 +196,7 @@ class TrafficLightSynchronizer(Node):
 
     def callback(self, msg) -> None:
         for signal in msg.traffic_light_groups:
-            lanelet_trafficright_id = str(signal.traffic_light_group_id)
+            lanelet_trafficright_id = int(signal.traffic_light_group_id)
             if lanelet_trafficright_id in self.light_map:
                 target_carla_light = self.light_map[lanelet_trafficright_id]
 
