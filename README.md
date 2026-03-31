@@ -97,14 +97,13 @@ Put the Ego vehicle and other agents in Autoware planning simulator.\
 
 ### 7. Traffic light synchronization
 Set the traffic light in Autoware planning simulator.\
-[NOTE]
-- Please set the traffic light coordinates in the configuration based on the coordinate system defined in projector.info.yaml and the IDs/locations found in lanelet2.osm.
-- Place the agent in autoware planning simulator. Details are available [here](https://autowarefoundation.github.io/autoware-documentation/main/demos/planning-sim/placing-objects/#placing-interactive-dummy-objects) .
+Traffic light colors set in the Planning Simulator are synchronized with the corresponding traffic lights in the CARLA simulator
+
 ## Inputs
 | Name                                | Type                                            | Description                           |
 | ----------------------------------- | ----------------------------------------------- | ------------------------------------- |
-| `/simulation/debug/localization/pose_estimator/pose_with_covariance`          | `geometry_msgs::msg::PoseWithCovarianceStamped` | Ego pose                          |
-| `/perception/object_recognition/objects` | `autoware_perception_msgs::msg::PredictedObjects`   | Objects Pose |
+| `/map/vector_map`          | `autoware_map_msgs/msg/LaneletMapBin` | Map(Traffic light search)                          |
+| `/map/map_projector_info`          | `/map/map_projector_info` | Map Projector                          |
 | `/perception/traffic_light_recognition/traffic_signals` | `autoware_perception_msgs::msg::TrafficLightGroupArray`   | Traffic light status|
 
 ## Future Plans
