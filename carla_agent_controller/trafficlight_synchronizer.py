@@ -21,6 +21,8 @@ import numpy as np
 
 # any
 import tempfile
+from typing import Optional
+
 
 
 class TrafficLightSynchronizer(Node):
@@ -87,7 +89,7 @@ class TrafficLightSynchronizer(Node):
             10,
         )
 
-    def _wait_for_map_projector_info(self):
+    def _wait_for_map_projector_info(self) -> MapProjectorInfo:
         self._received_map_msg = None
     
         qos = QoSProfile(
@@ -113,10 +115,10 @@ class TrafficLightSynchronizer(Node):
 
         return self._received_map_msg
 
-    def _map_callback(self, msg):
+    def _map_callback(self, msg: MapProjectorInfo) -> None:
         self._received_map_msg = msg
 
-    def _wait_for_map_message(self):
+    def _wait_for_map_message(self) -> LaneletMapBin:
         self.received_msg = []
         qos = QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL)
         sub = self.create_subscription(
@@ -130,10 +132,10 @@ class TrafficLightSynchronizer(Node):
         self.destroy_subscription(sub)
         return self.received_msg[0]
 
-    def lanelet_callback(self, msg):
+    def lanelet_callback(self, msg: LaneletMapBin) -> None:
         self.received_msg.append(msg)
 
-    def search_traffic_light(self, map_bin):
+    def search_traffic_light(self, map_bin: LaneletMapBin) -> list[dict[str, any]]:
         self.get_logger().info("Starting map analysis via subprocess...")
 
         with tempfile.NamedTemporaryFile(suffix=".bin", delete=True) as temp_map:
@@ -174,7 +176,7 @@ class TrafficLightSynchronizer(Node):
 
         return points
 
-    def find_closest_light(self, target_xy):
+    def find_closest_light(self, target_xy: list[float]) -> Optional[carla.TrafficLight]:
         min_dist = float("inf")
         closest_actor = None
 
