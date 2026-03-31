@@ -7,9 +7,9 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile, DurabilityPolicy
 
 # lanelet2
-import lanelet2
-# from lanelet2.projection import UtmProjector, MgrsProjector
+from lanelet2.projection import UtmProjector, LocalCartesianProjector
 from lanelet2.io import Origin, load
+from lanelet2.core import TrafficLight
 
 # autoware
 from autoware_map_msgs.msg import LaneletMapBin, MapProjectorInfo
@@ -143,22 +143,23 @@ class TrafficLightSynchronizer(Node):
 
             # load  laneletmap
             if self.projector_info.projector_type == "Local":
-                projector = lanelet2.projection.UtmProjector(Origin(
+                projector = UtmProjector(Origin(
                     self.projector_info.map_origin.latitude,
                     self.projector_info.map_origin.longitude,
                     self.projector_info.map_origin.altitude))
             elif self.projector_info.projector_type == "MGRS":
-                projector = lanelet2.projection.LocalCartesianProjector(Origin(
-                    self.projector_info.map_origin.latitude,
-                    self.projector_info.map_origin.longitude,
-                    self.projector_info.map_origin.altitude))
+                self.get_logger().WARN("The MGRS hasn't been tested enough.")
+                projector = UtmProjector(Origin(
+                    0.0,
+                    0.0,
+                    0.0))
             else:
                 raise ValueError(f"Unknown projector type: {self.projector_info.projector_type}")
             l_map = load(temp_map.name, projector)
 
         points = []
         for reg_el in l_map.regulatoryElementLayer:
-            if isinstance(reg_el, lanelet2.core.TrafficLight):
+            if isinstance(reg_el, TrafficLight):
                 for light in reg_el.trafficLights:
                     for pt in light:
                         points.append(
