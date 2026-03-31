@@ -108,7 +108,6 @@ Traffic light colors set in the Planning Simulator are synchronized with the cor
 
 ## Future Plans
 - Support pedestrian agent
-- Synchronize traffic lights between Autoware and Carla
 - Support Lanelet2 maps defined by MGRS.
 
 ## Links to Related Documents
