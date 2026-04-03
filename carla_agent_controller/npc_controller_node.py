@@ -16,7 +16,8 @@ from carla_agent_controller.util import connect_to_carla, ros_pose_to_carla_tran
 
 
 class AgentController(Node):
-    """This node controls CARLA agent(NPC) from Autoware. Updates agent poses to the received poses.
+    """
+    This node controls CARLA agent(NPC) from Autoware. Updates agent poses to the received poses.
     Subscribes:
         /perception/object_recognition/objects (PredictedObjects)
             Poses for the agent vehicle.

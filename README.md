@@ -95,10 +95,19 @@ Put the Ego vehicle and other agents in Autoware planning simulator.\
 | `/simulation/debug/localization/pose_estimator/pose_with_covariance`          | `geometry_msgs::msg::PoseWithCovarianceStamped` | Ego pose                          |
 | `/perception/object_recognition/objects` | `autoware_perception_msgs::msg::PredictedObjects`   | Objects Pose |
 
+### 7. Traffic light synchronization
+Set the traffic light in Autoware planning simulator.\
+Traffic light colors set in the Planning Simulator are synchronized with the corresponding traffic lights in the CARLA simulator
+
+## Inputs
+| Name                                | Type                                            | Description                           |
+| ----------------------------------- | ----------------------------------------------- | ------------------------------------- |
+| `/map/vector_map`          | `autoware_map_msgs/msg/LaneletMapBin` | Map(Traffic light search)                          |
+| `/map/map_projector_info`          | `/map/map_projector_info` | Map Projector                          |
+| `/perception/traffic_light_recognition/traffic_signals` | `autoware_perception_msgs::msg::TrafficLightGroupArray`   | Traffic light status|
 
 ## Future Plans
 - Support pedestrian agent
-- Synchronize traffic lights between Autoware and Carla
 - Support Lanelet2 maps defined by MGRS.
 
 ## Links to Related Documents
